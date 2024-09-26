@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 const path = require("path");
 
-const DOMAIN = "masaya365tumbangpreso.win";
+const DOMAIN = "masaya365casino.win";
 
 // 讀取本地的 index.html 文件
 const htmlPath = path.join(__dirname, "../frontend-app/dist/index.html"); // 正確的 index.html 路徑
