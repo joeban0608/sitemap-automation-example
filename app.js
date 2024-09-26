@@ -23,8 +23,10 @@ $("a").each((index, element) => {
   }
 });
 
+const DOMAIN = "masaya365casino.win";
 // 使用 Set 去重
 links = [...new Set(links)];
+links = links.filter((link) => link.includes(DOMAIN));
 
 // 生成 sitemap XML 結構
 let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
