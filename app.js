@@ -32,12 +32,12 @@ const date = new Date();
 // 格式化日期為 YYYY-MM-DD
 const formattedDate = date.toISOString().split("T")[0];
 
-const DOMAIN = "https://example.com";
+// const DOMAIN = "https://example.com";
 // 將抓取到的鏈接插入到 sitemap XML 中
 links.forEach((link) => {
   sitemapContent += `
   <url>
-    <loc>${DOMAIN}${link}</loc>
+    <loc>${link}</loc>
     <lastmod>${formattedDate}</lastmod>
   </url>
   `;
