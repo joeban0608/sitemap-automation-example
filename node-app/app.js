@@ -1,12 +1,11 @@
 const cheerio = require("cheerio");
 const fs = require("fs");
+const path = require("path");
 
 const DOMAIN = "masaya365casino.win";
+
 // 讀取本地的 index.html 文件
-const html = fs.readFileSync(
-  "Masaya365_game_app_0904_1847/index.html",
-  "utf-8"
-);
+const html = fs.readFileSync("dist/index.html", "utf-8");
 
 // 使用 Cheerio 加載 HTML
 const $ = cheerio.load(html);
@@ -26,8 +25,16 @@ $("a").each((index, element) => {
 
 // 使用 Set 去重
 links = [...new Set(links)];
+
+// 添加來自所有 .js 檔案的鏈接
+const jsDirectoryPath = "dist/assets"; // 指定 js 檔案所在目錄
+const jsLinks = extractLinksFromJsFiles(jsDirectoryPath, DOMAIN);
+links = [...new Set([...links, ...jsLinks])]; // 合併鏈接並去重
+
+// 過濾出包含 DOMAIN 的鏈接
 links = links.filter((link) => link.includes(DOMAIN));
 console.log("links", links);
+
 // 生成 sitemap XML 結構
 let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -53,6 +60,7 @@ sitemapContent += `</urlset>`;
 // 將生成的 sitemap 寫入 sitemap.xml 文件
 fs.writeFileSync("sitemap.xml", sitemapContent);
 
+// 生成 robots.txt
 const robotsTxt = `User-agent: *
 Allow: /
 Disallow:
@@ -61,3 +69,35 @@ Sitemap: https://${DOMAIN}/sitemap.xml
 
 fs.writeFileSync("robots.txt", robotsTxt);
 console.log("Sitemap 已生成: sitemap.xml");
+
+// 函數：從所有 .js 檔案中提取鏈接
+function extractLinksFromJsFiles(dir, domain) {
+  let jsLinks = [];
+  // 遞歸搜尋指定目錄下的所有 .js 文件
+  function searchJsFiles(directory) {
+    const files = fs.readdirSync(directory);
+    files.forEach((file) => {
+      const filePath = path.join(directory, file);
+      if (fs.lstatSync(filePath).isDirectory()) {
+        searchJsFiles(filePath);
+      } else if (path.extname(file) === ".js") {
+        // 如果是 .js 文件，進行域名檢查
+        const jsContent = fs.readFileSync(filePath, "utf-8");
+
+        // 使用正則表達式提取完整的 URL
+        const regex = new RegExp(
+          `https?:\/\/(www\.)?${domain}[^\\s"'<>]*`,
+          "g"
+        );
+        const matches = jsContent.match(regex);
+
+        if (matches) {
+          jsLinks.push(...matches);
+        }
+      }
+    });
+  }
+
+  searchJsFiles(dir);
+  return [...new Set(jsLinks)]; // 去重
+}
