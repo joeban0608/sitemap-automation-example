@@ -11,7 +11,7 @@ const html = fs.readFileSync(
 const $ = cheerio.load(html);
 
 // 存放 URL 的數組
-const links = [];
+let links = [];
 
 // 抓取所有的 <a> 標籤並提取 href 屬性
 $("a").each((index, element) => {
@@ -23,6 +23,9 @@ $("a").each((index, element) => {
   }
 });
 
+// 使用 Set 去重
+links = [...new Set(links)];
+
 // 生成 sitemap XML 結構
 let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -32,7 +35,6 @@ const date = new Date();
 // 格式化日期為 YYYY-MM-DD
 const formattedDate = date.toISOString().split("T")[0];
 
-// const DOMAIN = "https://example.com";
 // 將抓取到的鏈接插入到 sitemap XML 中
 links.forEach((link) => {
   sitemapContent += `
