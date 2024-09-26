@@ -1,8 +1,6 @@
 import "./App.css";
 
 function App() {
-  const DOMAIN = "masaya365tumbangpreso.win";
-
   return (
     <main>
       <h1>SEO example: {DOMAIN}</h1>
@@ -23,6 +21,8 @@ function App() {
 }
 
 export default App;
+
+const DOMAIN = "masaya365tumbangpreso.win";
 const links = [
   `https://masaya365tumbangpreso.win/masaya365-new-2024/`,
   `https://masaya365tumbangpreso.win/2024/09/02/masaya365-100bonus-firstdeposit/`,
