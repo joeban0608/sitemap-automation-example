@@ -71,9 +71,9 @@ Sitemap: https://${DOMAIN}/sitemap.xml
 fs.writeFileSync("robots.txt", robotsTxt);
 console.log("Sitemap 已生成: sitemap.xml");
 
-// 函數：從所有 .js 檔案中提取鏈接
 function extractLinksFromJsFiles(dir, domain) {
   let jsLinks = [];
+
   // 遞歸搜尋指定目錄下的所有 .js 文件
   function searchJsFiles(directory) {
     const files = fs.readdirSync(directory);
@@ -82,19 +82,19 @@ function extractLinksFromJsFiles(dir, domain) {
       if (fs.lstatSync(filePath).isDirectory()) {
         searchJsFiles(filePath);
       } else if (path.extname(file) === ".js") {
-        // 如果是 .js 文件，進行域名檢查
         const jsContent = fs.readFileSync(filePath, "utf-8");
         console.log("filePath", filePath);
-        // 使用正則表達式提取完整的 URL
-        const regex = new RegExp(
-          `https?://[^\\s"'<>]*${domain}[^\\s"'<>]*`,
-          "g"
-        );
 
-        const matches = jsContent.match(regex);
+        // 使用更具針對性的正則表達式提取子域名路徑
+        const pathRegex = /\/(news|games|sports)(\/[^\s"'<>]*)?/g; // 匹配/news、/games、/sports 路径
 
+        const matches = jsContent.match(pathRegex);
         if (matches) {
-          jsLinks.push(...matches);
+          matches.forEach((match) => {
+            if (!jsLinks.includes(`https://${domain}${match}`)) {
+              jsLinks.push(`https://${domain}${match}`);
+            }
+          });
         }
       }
     });
