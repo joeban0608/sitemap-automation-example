@@ -4,7 +4,7 @@ function App() {
   return (
     <main>
       <h1>SEO example: {DOMAIN}</h1>
-      <a href="https://masaya365tumbangpreso.win" style="display: none">
+      <a href="https://masaya365tumbangpreso.win" style={{ display: "none" }}>
         masaya365tumbangpreso.win
       </a>
       <ul style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
