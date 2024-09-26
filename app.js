@@ -54,6 +54,8 @@ sitemapContent += `</urlset>`;
 fs.writeFileSync("sitemap.xml", sitemapContent);
 
 const robotsTxt = `User-agent: *
+Allow: /
+Disallow:
 Sitemap: https://${DOMAIN}/sitemap.xml
 `;
 

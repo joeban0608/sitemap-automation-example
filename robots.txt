@@ -1,2 +1,4 @@
 User-agent: *
+Allow: /
+Disallow:
 Sitemap: https://masaya365casino.win/sitemap.xml
