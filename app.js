@@ -1,6 +1,7 @@
 const cheerio = require("cheerio");
 const fs = require("fs");
 
+const DOMAIN = "masaya365casino.win";
 // 讀取本地的 index.html 文件
 const html = fs.readFileSync(
   "Masaya365_game_app_0904_1847/index.html",
@@ -23,7 +24,6 @@ $("a").each((index, element) => {
   }
 });
 
-const DOMAIN = "masaya365casino.win";
 // 使用 Set 去重
 links = [...new Set(links)];
 links = links.filter((link) => link.includes(DOMAIN));
@@ -53,4 +53,10 @@ sitemapContent += `</urlset>`;
 // 將生成的 sitemap 寫入 sitemap.xml 文件
 fs.writeFileSync("sitemap.xml", sitemapContent);
 
+const robotsTxt = `User-agent: *
+Disallow: 
+Sitemap: https://${DOMAIN}/sitemap.xml
+`;
+
+fs.writeFileSync("robots.txt", robotsTxt);
 console.log("Sitemap 已生成: sitemap.xml");
