@@ -2,10 +2,11 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 const path = require("path");
 
-const DOMAIN = "masaya365casino.win";
+const DOMAIN = "masaya365tumbangpreso.win";
 
 // 讀取本地的 index.html 文件
-const html = fs.readFileSync("dist/index.html", "utf-8");
+const htmlPath = path.join(__dirname, "../frontend-app/dist/index.html"); // 正確的 index.html 路徑
+const html = fs.readFileSync(htmlPath, "utf-8");
 
 // 使用 Cheerio 加載 HTML
 const $ = cheerio.load(html);
@@ -27,7 +28,7 @@ $("a").each((index, element) => {
 links = [...new Set(links)];
 
 // 添加來自所有 .js 檔案的鏈接
-const jsDirectoryPath = "dist/assets"; // 指定 js 檔案所在目錄
+const jsDirectoryPath = path.join(__dirname, "../frontend-app/dist/assets"); // 指定 js 檔案所在目錄
 const jsLinks = extractLinksFromJsFiles(jsDirectoryPath, DOMAIN);
 links = [...new Set([...links, ...jsLinks])]; // 合併鏈接並去重
 
@@ -83,12 +84,13 @@ function extractLinksFromJsFiles(dir, domain) {
       } else if (path.extname(file) === ".js") {
         // 如果是 .js 文件，進行域名檢查
         const jsContent = fs.readFileSync(filePath, "utf-8");
-
+        console.log("filePath", filePath);
         // 使用正則表達式提取完整的 URL
         const regex = new RegExp(
-          `https?:\/\/(www\.)?${domain}[^\\s"'<>]*`,
+          `https?://[^\\s"'<>]*${domain}[^\\s"'<>]*`,
           "g"
         );
+
         const matches = jsContent.match(regex);
 
         if (matches) {
